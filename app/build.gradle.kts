@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "de.syntax_institut.jetpack.a04_05_online_shopper"
+    namespace = "de.syntax_institut.codingchallenges04_06"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "de.syntax_institut.jetpack.a04_05_online_shopper"
-        minSdk = 27
+        applicationId = "de.syntax_institut.codingchallenges04_06"
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -56,4 +56,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.moshi)
+    implementation(libs.retrofit)
+    implementation(libs.converterMoshi)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.logging.interceptor)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
 }
