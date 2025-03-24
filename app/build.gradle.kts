@@ -63,5 +63,4 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-
 }
