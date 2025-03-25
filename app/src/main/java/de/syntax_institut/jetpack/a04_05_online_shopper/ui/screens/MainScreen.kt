@@ -1,5 +1,6 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.screens
 
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -29,7 +30,7 @@ fun MainScreen(paddingValues: PaddingValues) {
                 ProductScreen(viewModel = productViewModel)
             }
             composable("cart") {
-                CartScreen()
+                CartScreen(viewModel = productViewModel)
             }
         }
     }

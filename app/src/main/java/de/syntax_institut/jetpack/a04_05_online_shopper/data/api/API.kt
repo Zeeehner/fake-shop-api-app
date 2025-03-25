@@ -46,6 +46,6 @@ fun main() = runBlocking {
         val products = apiService.getArticles()
         println("API Response: ${products}")
     } catch (e: Exception) {
-        println("API Fehler: ${e.message}")
+        println("API Error: ${e.message}")
     }
 }
