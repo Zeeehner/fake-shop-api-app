@@ -1,6 +1,7 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
 import android.util.Log.e
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
+
 
     // Grid aktivieren
     private val _isGridView = MutableStateFlow(true)

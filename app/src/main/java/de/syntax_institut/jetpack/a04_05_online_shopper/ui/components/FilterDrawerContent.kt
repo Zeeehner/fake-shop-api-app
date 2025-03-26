@@ -24,6 +24,7 @@ import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewMod
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun FilterDrawerContent(
@@ -33,7 +34,9 @@ fun FilterDrawerContent(
     viewModel: ProductViewModel,
     minPrice: String,
     maxPrice: String
+
 ) {
+    val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     ModalDrawerSheet(
         modifier = Modifier
             .background(Color.White)
@@ -61,7 +64,7 @@ fun FilterDrawerContent(
                         },
                         modifier = Modifier.padding(8.dp)
                     ) {
-                        Text("Grid")
+                        Text(if (isGridView) "List" else "Grid")
                     }
                 }
 
