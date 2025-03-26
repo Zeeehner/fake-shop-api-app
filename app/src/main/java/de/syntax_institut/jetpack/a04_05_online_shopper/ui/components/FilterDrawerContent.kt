@@ -23,10 +23,6 @@ import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewMod
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-
 
 @Composable
 fun FilterDrawerContent(

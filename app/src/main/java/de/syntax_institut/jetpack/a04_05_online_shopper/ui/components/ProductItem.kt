@@ -1,6 +1,5 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
-import android.R.attr.label
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
