@@ -1,6 +1,5 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,8 +22,11 @@ import androidx.compose.ui.unit.dp
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+
 
 @Composable
 fun FilterDrawerContent(
@@ -37,9 +39,9 @@ fun FilterDrawerContent(
 
 ) {
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
+
     ModalDrawerSheet(
-        modifier = Modifier
-            .width(300.dp)
+        modifier = Modifier.width(300.dp)
     ) {
         Column(
             modifier = Modifier
@@ -60,8 +62,7 @@ fun FilterDrawerContent(
                     Button(
                         onClick = {
                             viewModel.toggleViewMode()
-                        },
-                        modifier = Modifier.padding(8.dp)
+                        }, modifier = Modifier.padding(8.dp)
                     ) {
                         Text(if (isGridView) "List" else "Grid")
                     }
@@ -111,23 +112,13 @@ fun FilterDrawerContent(
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Button(
-                    onClick = {
-                        // placeholder
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Apply filter")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    onClick = { viewModel.clearFilters() },
-                    modifier = Modifier.fillMaxWidth()
+                    onClick = { viewModel.clearFilters()  }, modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Reset filter")
                 }
@@ -135,3 +126,4 @@ fun FilterDrawerContent(
         }
     }
 }
+

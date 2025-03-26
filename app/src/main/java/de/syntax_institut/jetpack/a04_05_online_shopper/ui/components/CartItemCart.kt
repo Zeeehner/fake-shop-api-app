@@ -60,10 +60,7 @@ fun CartItemCard(
                     onClick = onDecrease,
                     enabled = quantity > 1
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "remove item"
-                    )
+                    Text("-")
                 }
                 Text(
                     text = "$quantity",

@@ -3,7 +3,9 @@ package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Menu
@@ -33,7 +35,11 @@ fun SearchBarAndFilters(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         IconButton(onClick = onOpenDrawer) {
-            Icon(Icons.Default.Menu, contentDescription = "Filter")
+            Icon(
+                Icons.Default.Menu,
+                contentDescription = "Filter",
+                modifier = Modifier.width(48.dp).height(48.dp)
+            )
         }
 
         OutlinedTextField(

@@ -1,20 +1,23 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
-import android.util.Log.e
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Product
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
 
+    // Dark Mode Status
+    private val _isDarkMode = MutableStateFlow(false)
+    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
 
     // Grid aktivieren
     private val _isGridView = MutableStateFlow(true)
@@ -184,6 +187,13 @@ class ProductViewModel : ViewModel() {
      */
     fun toggleViewMode() {
         _isGridView.value = !_isGridView.value
+    }
+
+    /**
+     * Toggle DarkMode
+     */
+    fun toggleDarkMode() {
+        _isDarkMode.value = !_isDarkMode.value
     }
 
     /**
