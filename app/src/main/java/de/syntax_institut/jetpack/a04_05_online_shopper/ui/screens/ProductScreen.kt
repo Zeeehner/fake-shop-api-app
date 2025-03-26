@@ -3,12 +3,8 @@ package de.syntax_institut.jetpack.a04_05_online_shopper.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -18,14 +14,13 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ErrorDialog
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.FilterDrawerContent
+import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ProductGrid
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ProductList
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.SearchBarAndFilters
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
@@ -42,7 +37,7 @@ fun ProductScreen(viewModel: ProductViewModel) {
     val maxPrice = viewModel.maxPrice.collectAsStateWithLifecycle().value
     val filteredProductList = viewModel.filteredProductList.collectAsStateWithLifecycle().value
     val errorMessage = viewModel.errorMessage.collectAsStateWithLifecycle().value
-
+    val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
@@ -91,9 +86,17 @@ fun ProductScreen(viewModel: ProductViewModel) {
                         onRetry = { viewModel.retryFetchProducts() })
 
                     if (filteredProductList.isNotEmpty()) {
-                        ProductList(products = filteredProductList, viewModel = viewModel)
+                        if (isGridView) {
+                            ProductGrid(
+                                viewModel = viewModel
+                            )
+                        } else {
+                            ProductList(products = filteredProductList, viewModel = viewModel)
+                        }
                     }
                 }
-            })
+            }
+        )
     })
 }
+

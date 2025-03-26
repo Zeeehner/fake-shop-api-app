@@ -49,6 +49,7 @@ fun SearchBarAndFilters(
                         Icon(Icons.Default.Clear, contentDescription = "clear search")
                     }
                 }
-            })
+            }
+        )
     }
 }

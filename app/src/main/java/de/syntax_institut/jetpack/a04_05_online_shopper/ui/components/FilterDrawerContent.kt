@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +24,6 @@ import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewMod
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.ui.graphics.Color
-
 
 @Composable
 fun FilterDrawerContent(
@@ -48,11 +46,24 @@ fun FilterDrawerContent(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(
-                    "Filter",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(16.dp)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Filter",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Button(
+                        onClick = {
+                            viewModel.toggleViewMode()
+                        },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text("Grid")
+                    }
+                }
 
                 Text("Categories", modifier = Modifier.padding(16.dp))
                 LazyColumn {

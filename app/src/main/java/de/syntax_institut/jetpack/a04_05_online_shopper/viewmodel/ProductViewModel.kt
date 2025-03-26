@@ -14,6 +14,10 @@ class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
 
+    // Grid aktivieren
+    private val _isGridView = MutableStateFlow(true)
+    val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
+
     // Produktliste
     private val _productList = MutableStateFlow<List<Product>>(emptyList())
     val productList: StateFlow<List<Product>> = _productList.asStateFlow()
@@ -171,6 +175,13 @@ class ProductViewModel : ViewModel() {
         _selectedCategory.value = null
         _minPrice.value = ""
         _maxPrice.value = ""
+    }
+
+    /**
+     * Grid aktivieren
+     */
+    fun toggleViewMode() {
+        _isGridView.value = !_isGridView.value
     }
 
     /**
