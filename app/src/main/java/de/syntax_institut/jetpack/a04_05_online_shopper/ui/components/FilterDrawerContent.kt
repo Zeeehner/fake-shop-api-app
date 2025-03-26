@@ -39,7 +39,6 @@ fun FilterDrawerContent(
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     ModalDrawerSheet(
         modifier = Modifier
-            .background(Color.White)
             .width(300.dp)
     ) {
         Column(
