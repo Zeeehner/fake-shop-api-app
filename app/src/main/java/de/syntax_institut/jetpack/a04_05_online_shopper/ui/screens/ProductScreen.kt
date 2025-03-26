@@ -36,160 +36,164 @@ fun ProductScreen(viewModel: ProductViewModel) {
         it.split(" ").joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .width(300.dp)
-                    .fillMaxHeight()
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+        ModalDrawerSheet(
+            modifier = Modifier
+                .width(300.dp)
+                .fillMaxHeight()
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Text(
-                            "Filter",
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(16.dp)
-                        )
+                Column {
+                    Text(
+                        "Filter",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
 
-                        Text("Categories", modifier = Modifier.padding(16.dp))
-                        LazyColumn {
-                            items(categories.zip(formattedCategories)) { (apiCategory, displayCategory) ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = selectedCategory == apiCategory,
-                                        onClick = { viewModel.updateCategory(apiCategory) }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(displayCategory)
-                                }
+                    Text("Categories", modifier = Modifier.padding(16.dp))
+                    LazyColumn {
+                        items(categories.zip(formattedCategories)) { (apiCategory, displayCategory) ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = selectedCategory == apiCategory,
+                                    onClick = { viewModel.updateCategory(apiCategory) })
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(displayCategory)
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text("Price range", modifier = Modifier.padding(16.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            OutlinedTextField(
-                                value = minPrice,
-                                onValueChange = { viewModel.updatePriceRange(it, maxPrice) },
-                                label = { Text("Min") },
-                                modifier = Modifier.weight(1f),
-                                singleLine = true
-                            )
-                            OutlinedTextField(
-                                value = maxPrice,
-                                onValueChange = { viewModel.updatePriceRange(minPrice, it) },
-                                label = { Text("Max") },
-                                modifier = Modifier.weight(1f),
-                                singleLine = true
-                            )
-                        }
                     }
 
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Button(
-                            onClick = {
-                                coroutineScope.launch { drawerState.close() }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Apply filter")
-                        }
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(
-                            onClick = {
-                                viewModel.clearFilters()
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Reset filter")
-                        }
-                    }
-                }
-            }
-        },
-        content = {
-            Scaffold { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                ) {
+                    Text("Price range", modifier = Modifier.padding(16.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                            .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        IconButton(onClick = {
-                            coroutineScope.launch { drawerState.open() }
-                        }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Filter")
-                        }
-
                         OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { viewModel.updateSearchQuery(it) },
-                            label = { Text("Search for products") },
+                            value = minPrice,
+                            onValueChange = { viewModel.updatePriceRange(it, maxPrice) },
+                            label = { Text("Min") },
                             modifier = Modifier.weight(1f),
-                            singleLine = true,
-                            shape = MaterialTheme.shapes.medium,
-                            trailingIcon = {
-                                if (searchQuery.text.isNotBlank()) {
-                                    IconButton(onClick = { viewModel.updateSearchQuery(TextFieldValue("")) }) {
-                                        Icon(Icons.Default.Clear, contentDescription = "clear search")
-                                    }
-                                }
-                            }
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = maxPrice,
+                            onValueChange = { viewModel.updatePriceRange(minPrice, it) },
+                            label = { Text("Max") },
+                            modifier = Modifier.weight(1f),
+                            singleLine = true
                         )
                     }
+                }
 
-                    if (filteredProductList.isEmpty()) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "No products found",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    } else {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(filteredProductList, key = { it.id }) { product ->
-                                var isExpanded by remember { mutableStateOf(false) }
-                                ProductItem(
-                                    product = product,
-                                    viewModel = viewModel,
-                                    isExpanded = isExpanded,
-                                    onExpandClick = { isExpanded = !isExpanded }
-                                )
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            coroutineScope.launch { drawerState.close() }
+                        }, modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Apply filter")
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = {
+                            viewModel.clearFilters()
+                        }, modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Reset filter")
+                    }
+                }
+            }
+        }
+    }, content = {
+        Scaffold { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    IconButton(onClick = {
+                        coroutineScope.launch { drawerState.open() }
+                    }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Filter")
+                    }
+
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { viewModel.updateSearchQuery(it) },
+                        label = { Text("Search for products") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true,
+                        shape = MaterialTheme.shapes.medium,
+                        trailingIcon = {
+                            if (searchQuery.text.isNotBlank()) {
+                                IconButton(onClick = {
+                                    viewModel.updateSearchQuery(
+                                        TextFieldValue("")
+                                    )
+                                }) {
+                                    Icon(
+                                        Icons.Default.Clear, contentDescription = "clear search"
+                                    )
+                                }
                             }
+                        })
+                }
+
+                if (filteredProductList.isEmpty()) {
+                    AlertDialog(
+                        onDismissRequest = { viewModel.errorMessage },
+                        title = { "Error" },
+                        text = { "An unknown error occurred" },
+                        confirmButton = {
+                            TextButton(onClick = { viewModel.retryFetchProducts() }) {
+                                Text("Retry")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                // placeholder
+                            }) {
+                                Text("Dismiss")
+                            }
+                        })
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(filteredProductList, key = { it.id }) { product ->
+                            var isExpanded by remember { mutableStateOf(false) }
+                            ProductItem(
+                                product = product,
+                                viewModel = viewModel,
+                                isExpanded = isExpanded,
+                                onExpandClick = { isExpanded = !isExpanded })
                         }
                     }
                 }
             }
         }
-    )
+    })
 }
