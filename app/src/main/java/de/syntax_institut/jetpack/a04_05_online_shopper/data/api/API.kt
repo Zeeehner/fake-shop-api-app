@@ -6,6 +6,7 @@ import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Produ
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -33,7 +34,7 @@ private val retrofit = Retrofit.Builder()
 
 interface APIService {
     @GET("products")
-    suspend fun getArticles(): List<Product>
+    suspend fun getArticles(): Response<List<Product>>
 }
 
 object ShopAPI {

@@ -1,0 +1,124 @@
+package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.ui.graphics.Color
+
+
+@Composable
+fun FilterDrawerContent(
+    categories: List<String>,
+    formattedCategories: List<String>,
+    selectedCategory: String?,
+    viewModel: ProductViewModel,
+    minPrice: String,
+    maxPrice: String
+) {
+    ModalDrawerSheet(
+        modifier = Modifier
+            .background(Color.White)
+            .width(300.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .width(300.dp)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text(
+                    "Filter",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(16.dp)
+                )
+
+                Text("Categories", modifier = Modifier.padding(16.dp))
+                LazyColumn {
+                    items(categories.zip(formattedCategories)) { (apiCategory, displayCategory) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = selectedCategory == apiCategory,
+                                onClick = { viewModel.updateCategory(apiCategory) })
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(displayCategory)
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("Price range", modifier = Modifier.padding(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = minPrice,
+                        onValueChange = { viewModel.updatePriceRange(it, maxPrice) },
+                        label = { Text("Min") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = maxPrice,
+                        onValueChange = { viewModel.updatePriceRange(minPrice, it) },
+                        label = { Text("Max") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Button(
+                    onClick = {
+                        // placeholder
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Apply filter")
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Button(
+                    onClick = { viewModel.clearFilters() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Reset filter")
+                }
+            }
+        }
+    }
+}

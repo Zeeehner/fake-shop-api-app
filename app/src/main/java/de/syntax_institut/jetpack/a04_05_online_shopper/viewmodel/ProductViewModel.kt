@@ -1,8 +1,10 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
+import android.util.Log.e
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Product
 import kotlinx.coroutines.flow.*
@@ -25,7 +27,7 @@ class ProductViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    var errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     // Suchfeld
     private val _searchQuery = MutableStateFlow(TextFieldValue(""))
@@ -69,14 +71,26 @@ class ProductViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val products = ShopAPI.retrofitService.getArticles()
-                _productList.value = products
-                _errorMessage.value = null
+                val response = ShopAPI.retrofitService.getArticles()
+
+                if (response.isSuccessful) {
+                    _productList.value = response.body() ?: emptyList()
+                    _errorMessage.value = null
+                } else {
+                    _errorMessage.value = when (response.code()) {
+                        400 -> "Bad Request: The request was invalid."
+                        401 -> "Unauthorized: You don't have permission to access this resource."
+                        403 -> "Forbidden: Access to this resource is forbidden."
+                        404 -> "Not Found: The requested resource could not be found."
+                        500 -> "Internal Server Error: A server error occurred."
+                        else -> "Server error: ${response.code()}"
+                    }
+                }
             } catch (e: Exception) {
                 _errorMessage.value = when (e) {
-                    is java.net.UnknownHostException -> "Keine Internetverbindung"
-                    is retrofit2.HttpException -> "Serverfehler: ${e.code()}"
-                    else -> "Unerwarteter Fehler: ${e.localizedMessage}"
+                    is java.net.UnknownHostException -> "No internet connection"
+                    is retrofit2.HttpException -> "Server error: ${e.code()}"
+                    else -> "Unexpected error: ${e.localizedMessage}"
                 }
             } finally {
                 _isLoading.value = false

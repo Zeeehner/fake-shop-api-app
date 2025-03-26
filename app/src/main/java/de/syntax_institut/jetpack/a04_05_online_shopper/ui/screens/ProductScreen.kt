@@ -1,19 +1,33 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontStyle.Companion.Italic
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ProductItem
+import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ErrorDialog
+import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.FilterDrawerContent
+import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ProductList
+import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.SearchBarAndFilters
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -22,11 +36,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProductScreen(viewModel: ProductViewModel) {
 
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
-    val minPrice by viewModel.minPrice.collectAsStateWithLifecycle()
-    val maxPrice by viewModel.maxPrice.collectAsStateWithLifecycle()
-    val filteredProductList by viewModel.filteredProductList.collectAsStateWithLifecycle()
+    val searchQuery = viewModel.searchQuery.collectAsStateWithLifecycle().value
+    val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
+    val minPrice = viewModel.minPrice.collectAsStateWithLifecycle().value
+    val maxPrice = viewModel.maxPrice.collectAsStateWithLifecycle().value
+    val filteredProductList = viewModel.filteredProductList.collectAsStateWithLifecycle().value
+    val errorMessage = viewModel.errorMessage.collectAsStateWithLifecycle().value
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -36,160 +51,49 @@ fun ProductScreen(viewModel: ProductViewModel) {
         it.split(" ").joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .width(300.dp)
-                    .fillMaxHeight()
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+        FilterDrawerContent(
+            categories = categories,
+            formattedCategories = formattedCategories,
+            selectedCategory = selectedCategory,
+            viewModel = viewModel,
+            minPrice = minPrice,
+            maxPrice = maxPrice
+        )
+    }, content = {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
                         Text(
-                            "Filter",
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(16.dp)
+                            "FakeShop.api",
+                            style = MaterialTheme.typography.displayLarge,
+                            fontStyle = Italic,
+                            fontWeight = ExtraBold
                         )
-
-                        Text("Categories", modifier = Modifier.padding(16.dp))
-                        LazyColumn {
-                            items(categories.zip(formattedCategories)) { (apiCategory, displayCategory) ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = selectedCategory == apiCategory,
-                                        onClick = { viewModel.updateCategory(apiCategory) }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(displayCategory)
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text("Price range", modifier = Modifier.padding(16.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            OutlinedTextField(
-                                value = minPrice,
-                                onValueChange = { viewModel.updatePriceRange(it, maxPrice) },
-                                label = { Text("Min") },
-                                modifier = Modifier.weight(1f),
-                                singleLine = true
-                            )
-                            OutlinedTextField(
-                                value = maxPrice,
-                                onValueChange = { viewModel.updatePriceRange(minPrice, it) },
-                                label = { Text("Max") },
-                                modifier = Modifier.weight(1f),
-                                singleLine = true
-                            )
-                        }
                     }
-
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Button(
-                            onClick = {
-                                coroutineScope.launch { drawerState.close() }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Apply filter")
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(
-                            onClick = {
-                                viewModel.clearFilters()
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Reset filter")
-                        }
-                    }
-                }
-            }
-        },
-        content = {
-            Scaffold { paddingValues ->
+                )
+            }, content = { paddingValues ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        IconButton(onClick = {
-                            coroutineScope.launch { drawerState.open() }
-                        }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Filter")
-                        }
+                    SearchBarAndFilters(
+                        searchQuery = searchQuery,
+                        onSearchQueryChanged = { viewModel.updateSearchQuery(it) },
+                        onClearSearch = { viewModel.updateSearchQuery(TextFieldValue("")) },
+                        onOpenDrawer = { coroutineScope.launch { drawerState.open() } })
 
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { viewModel.updateSearchQuery(it) },
-                            label = { Text("Search for products") },
-                            modifier = Modifier.weight(1f),
-                            singleLine = true,
-                            shape = MaterialTheme.shapes.medium,
-                            trailingIcon = {
-                                if (searchQuery.text.isNotBlank()) {
-                                    IconButton(onClick = { viewModel.updateSearchQuery(TextFieldValue("")) }) {
-                                        Icon(Icons.Default.Clear, contentDescription = "clear search")
-                                    }
-                                }
-                            }
-                        )
-                    }
+                    ErrorDialog(
+                        errorMessage = errorMessage,
+                        filteredProductList = filteredProductList,
+                        onRetry = { viewModel.retryFetchProducts() })
 
-                    if (filteredProductList.isEmpty()) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "No products found",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    } else {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(filteredProductList, key = { it.id }) { product ->
-                                var isExpanded by remember { mutableStateOf(false) }
-                                ProductItem(
-                                    product = product,
-                                    viewModel = viewModel,
-                                    isExpanded = isExpanded,
-                                    onExpandClick = { isExpanded = !isExpanded }
-                                )
-                            }
-                        }
+                    if (filteredProductList.isNotEmpty()) {
+                        ProductList(products = filteredProductList, viewModel = viewModel)
                     }
                 }
-            }
-        }
-    )
+            })
+    })
 }
