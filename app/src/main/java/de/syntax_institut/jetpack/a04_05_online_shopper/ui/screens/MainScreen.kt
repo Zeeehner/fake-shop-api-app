@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.Cat
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.navigation.BottomNavigationBar
-import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.CatViewModel
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 
 @Composable
@@ -33,8 +34,12 @@ fun MainScreen(paddingValues: PaddingValues) {
                 CartScreen(viewModel = productViewModel)
             }
             composable("catScreen") {
-                val catViewModel: CatViewModel = viewModel()
-                CatScreen(viewModel = catViewModel, searchQuery = "cat", onBackPressed = { navController.popBackStack() })
+                val catViewModel: ProductViewModel = viewModel()
+                CatScreen(viewModel = catViewModel, searchQuery = "cat", onBackPressed = {
+                    navController.popBackStack()
+                    productViewModel.updateSearchQuery(TextFieldValue(""))
+                    navController.popBackStack("products", inclusive = false)
+                })
             }
         }
     }

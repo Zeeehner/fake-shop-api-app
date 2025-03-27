@@ -1,14 +1,12 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.CatApi
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.Cat
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Product
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,9 +17,15 @@ import kotlinx.coroutines.flow.asStateFlow
 class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
+    private val TAG = "CatViewModel"
+    val catApi = CatApi.retrofitService
+
+    // Cat API
+    private val _catList = MutableStateFlow<List<Cat>>(listOf())
+    val catList = _catList.asStateFlow()
 
     // Slider value
-    private val _sliderValue =  MutableStateFlow(20.0)
+    private val _sliderValue = MutableStateFlow(20.0)
     val sliderValue: StateFlow<Double> = _sliderValue.asStateFlow()
 
     // Limit Items
@@ -42,7 +46,6 @@ class ProductViewModel : ViewModel() {
 
     // Lade- und Fehlerzustand
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     var errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
@@ -213,4 +216,18 @@ class ProductViewModel : ViewModel() {
     fun retryFetchProducts() {
         fetchProducts()
     }
+
+    /**
+     * Katzenbilder laden
+     */
+    fun loadCatImages(searchQuery: String) {
+        viewModelScope.launch {
+            try {
+                _catList.value = catApi.getCatImagesWithHeader(500)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading cat images: $e")
+            }
+        }
+    }
 }
+

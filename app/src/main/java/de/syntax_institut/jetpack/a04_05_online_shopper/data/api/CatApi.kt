@@ -12,7 +12,6 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-
 private val apiKey = BuildConfig.API_KEY
 
 private const val CAT_BASE_URL = "https://api.thecatapi.com/v1/"

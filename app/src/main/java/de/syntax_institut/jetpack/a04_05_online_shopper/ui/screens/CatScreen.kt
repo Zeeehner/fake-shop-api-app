@@ -15,13 +15,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.SubcomposeAsyncImage
-import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.CatViewModel
+import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatScreen(
     modifier: Modifier = Modifier,
-    viewModel: CatViewModel = viewModel(),
+    viewModel: ProductViewModel = viewModel(),
     searchQuery: String,
     onBackPressed: () -> Unit
 ) {
