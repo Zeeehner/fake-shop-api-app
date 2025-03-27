@@ -34,7 +34,7 @@ fun MainScreen(paddingValues: PaddingValues) {
             }
             composable("catScreen") {
                 val catViewModel: CatViewModel = viewModel()
-                CatScreen(viewModel = catViewModel, searchQuery = "cat")
+                CatScreen(viewModel = catViewModel, searchQuery = "cat", onBackPressed = { navController.popBackStack() })
             }
         }
     }
