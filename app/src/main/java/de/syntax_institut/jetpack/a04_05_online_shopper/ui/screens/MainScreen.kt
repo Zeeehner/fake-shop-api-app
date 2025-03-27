@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.navigation.BottomNavigationBar
+import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.CatViewModel
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 
 @Composable
@@ -26,10 +27,14 @@ fun MainScreen(paddingValues: PaddingValues) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("products") {
-                ProductScreen(viewModel = productViewModel)
+                ProductScreen(viewModel = productViewModel, navController = navController)
             }
             composable("cart") {
                 CartScreen(viewModel = productViewModel)
+            }
+            composable("catScreen") {
+                val catViewModel: CatViewModel = viewModel()
+                CatScreen(viewModel = catViewModel, searchQuery = "cat")
             }
         }
     }

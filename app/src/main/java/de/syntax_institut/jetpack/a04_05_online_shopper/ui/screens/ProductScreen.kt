@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ErrorDialog
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.FilterDrawerContent
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ProductGrid
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductScreen(viewModel: ProductViewModel) {
+fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
 
     val searchQuery = viewModel.searchQuery.collectAsStateWithLifecycle().value
     val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
@@ -39,12 +41,14 @@ fun ProductScreen(viewModel: ProductViewModel) {
     val errorMessage = viewModel.errorMessage.collectAsStateWithLifecycle().value
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
-    val itemLimit = viewModel.itemLimit.collectAsStateWithLifecycle().value
 
     val categories = listOf("men's clothing", "women's clothing", "jewelery", "electronics")
     val formattedCategories = categories.map {
         it.split(" ").joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
+    }
+
+    if (searchQuery.text.contains("cat", ignoreCase = true)) {
+        navController.navigate("catScreen")
     }
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
@@ -79,7 +83,20 @@ fun ProductScreen(viewModel: ProductViewModel) {
                         searchQuery = searchQuery,
                         onSearchQueryChanged = { viewModel.updateSearchQuery(it) },
                         onClearSearch = { viewModel.updateSearchQuery(TextFieldValue("")) },
-                        onOpenDrawer = { coroutineScope.launch { drawerState.open() } })
+                        onOpenDrawer = {
+                            // placeholder
+                        }
+                    )
+
+                    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+                    if (searchQuery.text.contains("cat", ignoreCase = true) &&
+                        navBackStackEntry?.destination?.route != "catScreen") {
+                        navController.navigate("catScreen")
+                    }
+
+                    if (filteredProductList.isNotEmpty()) {
+                        ProductList(products = filteredProductList, viewModel = viewModel)
+                    }
 
                     ErrorDialog(
                         errorMessage = errorMessage,

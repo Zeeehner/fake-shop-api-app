@@ -1,5 +1,6 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
+import android.util.Log.v
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,8 +40,7 @@ fun FilterDrawerContent(
     maxPrice: String
 ) {
     val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
-    val itemLimit by viewModel.itemLimit.collectAsStateWithLifecycle()
-    var sliderValue by remember { mutableStateOf(itemLimit.toFloat()) }
+    val sliderValue by viewModel.sliderValue.collectAsStateWithLifecycle()
 
     ModalDrawerSheet(
         modifier = Modifier.width(300.dp)
@@ -114,11 +114,15 @@ fun FilterDrawerContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Limit items: ${sliderValue.toInt()}", modifier = Modifier.padding(bottom = 8.dp))
+                Text(
+                    "Limit items: ${sliderValue.toInt()}",
+                    modifier = Modifier.padding(bottom = 8.dp
+                    )
+                )
                 Slider(
-                    value = sliderValue,
+                    value = sliderValue.toFloat(),
                     onValueChange = {
-                        sliderValue = it
+                        viewModel.updateSliderValue(it.toDouble())
                     },
                     onValueChangeFinished = {
                         viewModel.updateItemLimit(sliderValue.toInt())
