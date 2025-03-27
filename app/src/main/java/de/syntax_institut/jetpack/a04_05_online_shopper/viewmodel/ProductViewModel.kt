@@ -1,5 +1,10 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.util.fastCbrt
 import androidx.lifecycle.ViewModel
@@ -15,6 +20,10 @@ import kotlinx.coroutines.flow.asStateFlow
 class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
+
+    // Slider value
+    private val _sliderValue =  MutableStateFlow(20.0)
+    val sliderValue: StateFlow<Double> = _sliderValue.asStateFlow()
 
     // Limit Items
     private val _itemLimit = MutableStateFlow(20)
@@ -174,6 +183,8 @@ class ProductViewModel : ViewModel() {
         _selectedCategory.value = null
         _minPrice.value = ""
         _maxPrice.value = ""
+        _itemLimit.value = 20
+        updateSliderValue(20.0)
     }
 
     /**
@@ -188,6 +199,13 @@ class ProductViewModel : ViewModel() {
      */
     fun updateItemLimit(limit: Int) {
         _itemLimit.value = limit
+    }
+
+    /**
+     * SliderValue
+     */
+    fun updateSliderValue(a: Double) {
+        _sliderValue.value = a
     }
 
     /**
