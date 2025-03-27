@@ -1,6 +1,7 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.util.fastCbrt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
@@ -15,12 +16,12 @@ class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
 
-    // Dark Mode Status
-    private val _isDarkMode = MutableStateFlow(false)
-    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
+    // Limit Items
+    private val _itemLimit = MutableStateFlow(20)
+    val itemLimit: StateFlow<Int> = _itemLimit.asStateFlow()
 
     // Grid aktivieren
-    private val _isGridView = MutableStateFlow(true)
+    private val _isGridView = MutableStateFlow(false)
     val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
 
     // Produktliste
@@ -152,13 +153,6 @@ class ProductViewModel : ViewModel() {
     }
 
     /**
-     * Suchanfrage löschen
-     */
-    fun clearSearchQuery() {
-        _searchQuery.value = TextFieldValue("")
-    }
-
-    /**
      * Kategorie aktualisieren
      */
     fun updateCategory(category: String) {
@@ -190,10 +184,10 @@ class ProductViewModel : ViewModel() {
     }
 
     /**
-     * Toggle DarkMode
+     * Update Limit
      */
-    fun toggleDarkMode() {
-        _isDarkMode.value = !_isDarkMode.value
+    fun updateItemLimit(limit: Int) {
+        _itemLimit.value = limit
     }
 
     /**

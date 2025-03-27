@@ -22,6 +22,11 @@ import androidx.compose.ui.unit.dp
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.Slider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
@@ -32,9 +37,10 @@ fun FilterDrawerContent(
     viewModel: ProductViewModel,
     minPrice: String,
     maxPrice: String
-
 ) {
-    val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
+    val isGridView by viewModel.isGridView.collectAsStateWithLifecycle()
+    val itemLimit by viewModel.itemLimit.collectAsStateWithLifecycle()
+    var sliderValue by remember { mutableStateOf(itemLimit.toFloat()) }
 
     ModalDrawerSheet(
         modifier = Modifier.width(300.dp)
@@ -42,7 +48,8 @@ fun FilterDrawerContent(
         Column(
             modifier = Modifier
                 .width(300.dp)
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -52,30 +59,30 @@ fun FilterDrawerContent(
                 ) {
                     Text(
                         "Filter",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(16.dp)
+                        style = MaterialTheme.typography.headlineSmall
                     )
-                    Button(
-                        onClick = {
-                            viewModel.toggleViewMode()
-                        }, modifier = Modifier.padding(8.dp)
-                    ) {
+                    Button(onClick = { viewModel.toggleViewMode() }) {
                         Text(if (isGridView) "List" else "Grid")
                     }
                 }
 
-                Text("Categories", modifier = Modifier.padding(16.dp))
-                LazyColumn {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("Categories", modifier = Modifier.padding(bottom = 8.dp))
+                LazyColumn(
+                    modifier = Modifier.weight(1f, fill = false)
+                ) {
                     items(categories.zip(formattedCategories)) { (apiCategory, displayCategory) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 4.dp),
+                                .padding(vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
                                 selected = selectedCategory == apiCategory,
-                                onClick = { viewModel.updateCategory(apiCategory) })
+                                onClick = { viewModel.updateCategory(apiCategory) }
+                            )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(displayCategory)
                         }
@@ -84,11 +91,9 @@ fun FilterDrawerContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Price range", modifier = Modifier.padding(16.dp))
+                Text("Price range", modifier = Modifier.padding(bottom = 8.dp))
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedTextField(
@@ -106,20 +111,32 @@ fun FilterDrawerContent(
                         singleLine = true
                     )
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("Limit items: ${sliderValue.toInt()}", modifier = Modifier.padding(bottom = 8.dp))
+                Slider(
+                    value = sliderValue,
+                    onValueChange = {
+                        sliderValue = it
+                    },
+                    onValueChangeFinished = {
+                        viewModel.updateItemLimit(sliderValue.toInt())
+                    },
+                    valueRange = 1f..20f,
+                    steps = 18,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(
-                modifier = Modifier.padding(16.dp)
+            Button(
+                onClick = { viewModel.clearFilters() },
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Button(
-                    onClick = { viewModel.clearFilters()  }, modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Reset filter")
-                }
+                Text("Reset filter")
             }
         }
     }
 }
+
 

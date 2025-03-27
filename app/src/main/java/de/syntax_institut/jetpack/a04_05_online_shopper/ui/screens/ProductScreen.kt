@@ -40,6 +40,7 @@ fun ProductScreen(viewModel: ProductViewModel) {
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    val itemLimit = viewModel.itemLimit.collectAsStateWithLifecycle().value
 
     val categories = listOf("men's clothing", "women's clothing", "jewelery", "electronics")
     val formattedCategories = categories.map {

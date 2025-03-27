@@ -1,5 +1,6 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,9 +58,9 @@ fun CartItemCard(
             ) {
                 IconButton(
                     onClick = onDecrease,
-                    enabled = quantity > 1
+                    modifier = Modifier.then(Modifier.clickable(enabled = quantity > 1) { onDecrease() })
                 ) {
-                    Text("-")
+                   Text("-")
                 }
                 Text(
                     text = "$quantity",
