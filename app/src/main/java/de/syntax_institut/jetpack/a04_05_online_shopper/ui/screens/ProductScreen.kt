@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
@@ -41,14 +42,12 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val errorMessage = viewModel.errorMessage.collectAsStateWithLifecycle().value
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
+    val itemLimit by viewModel.itemLimit.collectAsStateWithLifecycle()
 
     val categories = listOf("men's clothing", "women's clothing", "jewelery", "electronics")
     val formattedCategories = categories.map {
         it.split(" ").joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
-    }
-
-    if (searchQuery.text.contains("cat", ignoreCase = true)) {
-        navController.navigate("catScreen")
     }
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
@@ -83,26 +82,18 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
                         searchQuery = searchQuery,
                         onSearchQueryChanged = { viewModel.updateSearchQuery(it) },
                         onClearSearch = { viewModel.updateSearchQuery(TextFieldValue("")) },
-                        onOpenDrawer = {
-                            // placeholder
-                        }
-                    )
-
-                    val navBackStackEntry = navController.currentBackStackEntryAsState().value
-                    if (searchQuery.text.contains("cat", ignoreCase = true) &&
-                        navBackStackEntry?.destination?.route != "catScreen") {
-                        navController.navigate("catScreen")
-                    }
-
-                    if (filteredProductList.isNotEmpty()) {
-                        ProductList(products = filteredProductList, viewModel = viewModel)
-                    }
+                        onOpenDrawer = { coroutineScope.launch { drawerState.open() } })
 
                     ErrorDialog(
                         errorMessage = errorMessage,
                         filteredProductList = filteredProductList,
                         onRetry = { viewModel.retryFetchProducts() })
 
+                    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+                    if (searchQuery.text.contains("cat", ignoreCase = true) &&
+                        navBackStackEntry?.destination?.route != "catScreen") {
+                        navController.navigate("catScreen")
+                    }
                     if (filteredProductList.isNotEmpty()) {
                         if (isGridView) {
                             ProductGrid(

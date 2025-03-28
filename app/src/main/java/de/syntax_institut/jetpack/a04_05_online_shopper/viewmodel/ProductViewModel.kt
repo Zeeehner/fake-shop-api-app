@@ -1,18 +1,18 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
 import android.util.Log
+import android.util.Log.e
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.CatApi
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.Cat
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Product
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class ProductViewModel : ViewModel() {
 
@@ -33,7 +33,7 @@ class ProductViewModel : ViewModel() {
     val itemLimit: StateFlow<Int> = _itemLimit.asStateFlow()
 
     // Grid aktivieren
-    private val _isGridView = MutableStateFlow(false)
+    private val _isGridView = MutableStateFlow(true)
     val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
 
     // Produktliste
@@ -46,6 +46,7 @@ class ProductViewModel : ViewModel() {
 
     // Lade- und Fehlerzustand
     private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     var errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
@@ -164,6 +165,13 @@ class ProductViewModel : ViewModel() {
     }
 
     /**
+     * Suchanfrage löschen
+     */
+    fun clearSearchQuery() {
+        _searchQuery.value = TextFieldValue("")
+    }
+
+    /**
      * Kategorie aktualisieren
      */
     fun updateCategory(category: String) {
@@ -185,8 +193,6 @@ class ProductViewModel : ViewModel() {
         _selectedCategory.value = null
         _minPrice.value = ""
         _maxPrice.value = ""
-        _itemLimit.value = 20
-        updateSliderValue(20.0)
     }
 
     /**
@@ -197,17 +203,10 @@ class ProductViewModel : ViewModel() {
     }
 
     /**
-     * Update Limit
-     */
-    fun updateItemLimit(limit: Int) {
-        _itemLimit.value = limit
-    }
-
-    /**
      * SliderValue
      */
     fun updateSliderValue(a: Double) {
-        _sliderValue.value = a
+        _sliderValue.update { a }
     }
 
     /**
@@ -230,4 +229,3 @@ class ProductViewModel : ViewModel() {
         }
     }
 }
-

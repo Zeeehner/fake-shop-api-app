@@ -18,11 +18,11 @@ plugins {
 }
 
 android {
-    namespace = "de.syntax_institut.codingchallenges04_06"
+    namespace = "de.syntax_institut.jetpack.a04_05_online_shopper"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "de.syntax_institut.codingchallenges04_06"
+        applicationId = "de.syntax_institut.jetpack.a04_05_online_shopper"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

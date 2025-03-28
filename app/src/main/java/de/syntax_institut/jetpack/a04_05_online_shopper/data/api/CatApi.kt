@@ -2,7 +2,12 @@ package de.syntax_institut.jetpack.a04_05_online_shopper.data.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import de.syntax_institut.codingchallenges04_06.BuildConfig
+import de.syntax_institut.jetpack.a04_05_online_shopper.BuildConfig
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.CAT_BASE_URL
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.CatAPIService
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.cat_loggingInterceptor
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.cat_okHttpClient
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.moshi
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.Cat
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

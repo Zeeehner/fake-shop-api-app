@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import de.syntax_institut.codingchallenges04_06.R
+import de.syntax_institut.jetpack.a04_05_online_shopper.R
 
 @Composable
 fun EmptyCartContent(modifier: Modifier = Modifier) {
