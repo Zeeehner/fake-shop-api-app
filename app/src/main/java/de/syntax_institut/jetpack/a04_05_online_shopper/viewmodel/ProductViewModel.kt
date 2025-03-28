@@ -14,7 +14,7 @@ import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Produ
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class ProductViewModel : ViewModel() {
+classProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
     private val TAG = "CatViewModel"
