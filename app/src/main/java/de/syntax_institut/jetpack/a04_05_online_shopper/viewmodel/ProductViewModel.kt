@@ -1,18 +1,17 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel
 
 import android.util.Log
-import android.util.Log.e
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.CatApi
-import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.Cat
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.model.product.Product
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlin.collections.filter
+import kotlin.collections.toMutableMap
+import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
 
 class ProductViewModel : ViewModel() {
 
@@ -68,8 +67,14 @@ class ProductViewModel : ViewModel() {
 
     // Kombinierte Filterung der Produktliste
     val filteredProductList: StateFlow<List<Product>> = combine(
-        _productList, _searchQuery, _selectedCategory, _minPrice, _maxPrice
-    ) { products, query, category, minP, maxP ->
+        _productList, _searchQuery, _selectedCategory, _minPrice, _maxPrice, _sliderValue
+    ) { args ->
+        val products = args[0] as List<Product>
+        val query = args[1] as TextFieldValue
+        val category = args[2] as String?
+        val minP = args[3] as String
+        val maxP = args[4] as String
+        val sliderValue = args[5] as Double
 
         products.filter { product ->
             val matchesQuery =
@@ -79,8 +84,9 @@ class ProductViewModel : ViewModel() {
             val matchesMaxPrice = maxP.toFloatOrNull()?.let { product.price <= it } ?: true
 
             matchesQuery && matchesCategory && matchesMinPrice && matchesMaxPrice
-        }
+        }.take(sliderValue.toInt())
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
 
     init {
         fetchProducts()
@@ -165,13 +171,6 @@ class ProductViewModel : ViewModel() {
     }
 
     /**
-     * Suchanfrage löschen
-     */
-    fun clearSearchQuery() {
-        _searchQuery.value = TextFieldValue("")
-    }
-
-    /**
      * Kategorie aktualisieren
      */
     fun updateCategory(category: String) {
@@ -193,6 +192,7 @@ class ProductViewModel : ViewModel() {
         _selectedCategory.value = null
         _minPrice.value = ""
         _maxPrice.value = ""
+        updateSliderValue(20.0)
     }
 
     /**

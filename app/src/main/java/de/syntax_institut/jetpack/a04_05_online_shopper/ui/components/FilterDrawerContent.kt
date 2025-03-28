@@ -1,6 +1,5 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
@@ -36,7 +34,6 @@ fun FilterDrawerContent(
     viewModel: ProductViewModel,
     minPrice: String,
     maxPrice: String
-
 ) {
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     val sliderValue by viewModel.sliderValue.collectAsStateWithLifecycle()
@@ -123,8 +120,8 @@ fun FilterDrawerContent(
                 )
                 Slider(
                     value = sliderValue.toFloat(),
-                    onValueChange = {
-                        viewModel.updateSliderValue(it.toDouble())
+                    onValueChange = { newValaue ->
+                        viewModel.updateSliderValue(newValaue.toDouble())
                     },
                     valueRange = 1f..20f,
                     steps = 18

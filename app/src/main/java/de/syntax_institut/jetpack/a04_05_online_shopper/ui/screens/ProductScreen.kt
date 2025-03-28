@@ -28,6 +28,7 @@ import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.ProductLis
 import de.syntax_institut.jetpack.a04_05_online_shopper.ui.components.SearchBarAndFilters
 import de.syntax_institut.jetpack.a04_05_online_shopper.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
+import kotlin.collections.isNotEmpty
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +44,6 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val isGridView = viewModel.isGridView.collectAsStateWithLifecycle().value
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
-    val itemLimit by viewModel.itemLimit.collectAsStateWithLifecycle()
 
     val categories = listOf("men's clothing", "women's clothing", "jewelery", "electronics")
     val formattedCategories = categories.map {

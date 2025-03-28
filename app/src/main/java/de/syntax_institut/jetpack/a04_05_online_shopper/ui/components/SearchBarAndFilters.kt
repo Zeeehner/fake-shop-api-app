@@ -38,7 +38,7 @@ fun SearchBarAndFilters(
             Icon(
                 Icons.Default.Menu,
                 contentDescription = "Filter",
-                modifier = Modifier.width(48.dp).height(48.dp)
+                modifier = Modifier.width(70.dp).height(70.dp)
             )
         }
 
