@@ -1,5 +1,6 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -20,14 +21,16 @@ fun ProductList(products: List<Product>, viewModel: ProductViewModel) {
 
     LazyColumn {
         items(limitedProducts) { product ->
-            ProductItem(
-                product = product,
-                isExpanded = expandedProduct == product,
-                onExpandClick = {
-                    expandedProduct = if (expandedProduct == product) null else product
-                },
-                viewModel = viewModel
-            )
+            AnimatedVisibility(visible = true) {
+                ProductItem(
+                    product = product,
+                    isExpanded = expandedProduct == product,
+                    onExpandClick = {
+                        expandedProduct = if (expandedProduct == product) null else product
+                    },
+                    viewModel = viewModel
+                )
+            }
         }
     }
 }

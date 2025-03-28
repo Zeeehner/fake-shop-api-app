@@ -13,7 +13,7 @@ import kotlin.collections.filter
 import kotlin.collections.toMutableMap
 import de.syntax_institut.jetpack.a04_05_online_shopper.data.api.ShopAPI
 
-classProductViewModel : ViewModel() {
+class ProductViewModel : ViewModel() {
 
     private val MAX_CART_QUANTITY = 10
     private val TAG = "CatViewModel"
@@ -222,7 +222,7 @@ classProductViewModel : ViewModel() {
     fun loadCatImages(searchQuery: String) {
         viewModelScope.launch {
             try {
-                _catList.value = catApi.getCatImagesWithHeader(500)
+                _catList.value = catApi.getCatImagesWithHeader(50)
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading cat images: $e")
             }

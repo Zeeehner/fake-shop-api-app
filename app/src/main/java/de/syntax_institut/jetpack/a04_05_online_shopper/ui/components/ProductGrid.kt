@@ -1,5 +1,6 @@
 package de.syntax_institut.jetpack.a04_05_online_shopper.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,7 +23,9 @@ fun ProductGrid(viewModel: ProductViewModel) {
         modifier = Modifier.fillMaxSize()
     ) {
         itemsIndexed(limitedProducts) { index, product ->
-            ProductThumbnail(product = product)
+            AnimatedVisibility(visible = true) {
+                ProductThumbnail(product = product)
+            }
         }
     }
 }
