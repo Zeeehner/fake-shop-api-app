@@ -41,7 +41,6 @@ private val retrofit = Retrofit.Builder()
 
 interface CatAPIService {
 
-    // requests mit den endpunkten
     @GET("images/search")
     suspend fun getCatImagesWithParam(
         @Query("limit") limit: Int,
