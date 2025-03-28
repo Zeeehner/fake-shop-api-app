@@ -222,7 +222,7 @@ class ProductViewModel : ViewModel() {
     fun loadCatImages(searchQuery: String) {
         viewModelScope.launch {
             try {
-                _catList.value = catApi.getCatImagesWithHeader(50)
+                _catList.value = catApi.getCatImagesWithHeader(100)
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading cat images: $e")
             }
