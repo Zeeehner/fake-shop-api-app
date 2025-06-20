@@ -33,10 +33,13 @@ This demo integrates a public REST API and features filtering, cart management, 
   <img src="screenshots/filterScreen.png" width="180"/>
   <img src="screenshots/listScreen.png" width="180"/>
   <img src="screenshots/shoppingCart.png" width="180"/>
-  <img src="screenshots/catList.png" width="180"/>
 </p>
 
 ---
+
+🐾 Fun Detail
+
+Try searching for cat in the search bar – you'll unlock a hidden LazyColumn easter egg. 😺
 
 ## 🚀 Getting Started
 
@@ -44,6 +47,3 @@ This demo integrates a public REST API and features filtering, cart management, 
 git clone https://github.com/Zeeehner/fake-shop-api-app.git
 
 
-🐾 Fun Detail
-
-Try searching for cat in the search bar – you'll unlock a hidden LazyColumn easter egg. 😺
