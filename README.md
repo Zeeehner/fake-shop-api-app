@@ -1,18 +1,49 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ODw2v3jA)
-# 04-06-Online-Shopper
+# 🛒 FakeShop API App
 
-## OnlineShopper App
+A responsive Android shopping app built with **Jetpack Compose**.  
+This demo integrates a public REST API and features filtering, cart management, and a clean MVVM architecture.
 
-Diese Woche wirst du eine App entwickeln, die einem Online-Shopping ähnlich ist.
-Es werden über eine API Artikel mit Titel, Preis, Bilder und weiterem geladen. 
-Die Artikel werden dann in einer Liste mit Bildern angezeigt. 
+---
 
-Standardmäßig werden alle verfügbaren Artikel angezeigt (20 Stück). 
-Der User hat die Möglichkeit nur die Artikel einer Kategorie anzeigen zulassen (über den blauen Button oben-links).
-Zusätzlich kann der User auch ein Limit anzugeben, wie viele Artikel angezeigt werden sollen (über das Textfeld oben-rechts).
+## ✨ Features
 
-# FakeStoreAPI
+- 🛍 Load products via [FakeStoreAPI](https://fakestoreapi.com)
+- 🔍 Filter by category and price range
+- 🧱 Switch between `LazyColumn` (list) and `LazyVerticalGrid` (grid)
+- 🛒 Cart system with quantity adjustment and total calculation
+- 💡 State-driven UI with `StateFlow` and `ViewModel`
+- 📷 Image loading with Coil
 
-Die API, die für das Projekt verwendet wird, ist die FakeStoreAPI.
-Mehr Informationen über die API findest du über diesen Link: [FakeStoreAPI](https://fakestoreapi.com)
-Eine Dokumentation zur API findest du über diesen Link: [API Dokumentation](https://fakestoreapi.com/docs)
+---
+
+## 🧰 Tech Stack
+
+- **Kotlin** + Jetpack **Compose**
+- **MVVM** architecture
+- **Retrofit** for API calls
+- **Coil** for images
+- **Material 3** for UI components
+
+---
+
+## 📸 UI Preview
+
+<p align="center">
+  <img src="screenshots/homeScreen.png" width="180"/>
+  <img src="screenshots/filterScreen.png" width="180"/>
+  <img src="screenshots/listScreen.png" width="180"/>
+  <img src="screenshots/shoppingCart.png" width="180"/>
+  <img src="screenshots/catList.png" width="180"/>
+</p>
+
+---
+
+## 🚀 Getting Started
+
+```bash
+git clone https://github.com/Zeeehner/fake-shop-api-app.git
+
+
+🐾 Fun Detail
+
+Try searching for cat in the search bar – you'll unlock a hidden LazyColumn easter egg. 😺
